@@ -1,92 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Guess the Number Game</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guess the Number</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom, #1e3c72, #2a5298);
-      color: white;
-      text-align: center;
-      padding: 50px;
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #9face6);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
+
+    .game-container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      animation: fadeIn 1s ease;
+    }
+
     h1 {
-      font-size: 2.5em;
+      color: #333;
+      margin-bottom: 15px;
     }
-    #game {
-      margin-top: 30px;
+
+    p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 20px;
     }
-    input, button {
+
+    input[type="number"] {
       padding: 10px;
-      font-size: 1.2em;
-      margin: 10px;
+      font-size: 16px;
+      width: 60%;
+      border: 2px solid #9face6;
       border-radius: 8px;
-      border: none;
-    }
-    input {
-      width: 120px;
+      outline: none;
       text-align: center;
+      transition: 0.3s;
     }
+
+    input[type="number"]:focus {
+      border-color: #74ebd5;
+      box-shadow: 0 0 8px rgba(116, 235, 213, 0.5);
+    }
+
     button {
-      background: #ff9800;
-      color: white;
+      padding: 10px 20px;
+      margin-top: 12px;
+      background: #74ebd5;
+      border: none;
+      border-radius: 8px;
+      color: #333;
+      font-size: 16px;
       cursor: pointer;
+      transition: background 0.3s;
     }
+
     button:hover {
-      background: #e68900;
+      background: #62d2c5;
     }
-    #message {
-      font-size: 1.3em;
+
+    .message {
       margin-top: 20px;
+      font-weight: bold;
+      font-size: 16px;
+      color: #333;
+      min-height: 24px;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: scale(0.95);}
+      to {opacity: 1; transform: scale(1);}
     }
   </style>
 </head>
 <body>
-  <h1>🎯 Guess the Number 🎯</h1>
-  <p>The computer picked a number between <b>1 and 100</b>. Can you guess it?</p>
-  
-  <div id="game">
-    <input type="number" id="guess" placeholder="Enter guess" min="1" max="100">
-    <button onclick="makeGuess()">Guess</button>
-    <p id="message"></p>
+  <div class="game-container">
+    <h1>🎯 Guess the Number</h1>
+    <p>Computer has chosen a number (1–100). Can you guess it?</p>
+    <input type="number" id="guess" placeholder="Enter your guess" />
+    <br>
+    <button onclick="checkGuess()">Guess</button>
+    <div class="message" id="message"></div>
   </div>
 
   <script>
-    let secretNumber = Math.floor(Math.random() * 100) + 1; // random number 1-100
-    let attempts = 0;
+    let secret = Math.floor(Math.random() * 100) + 1;
 
-    function makeGuess() {
-      const userGuess = parseInt(document.getElementById('guess').value);
-      const message = document.getElementById('message');
-      attempts++;
+    function checkGuess() {
+      let guess = Number(document.getElementById("guess").value);
+      let message = document.getElementById("message");
 
-      if (isNaN(userGuess)) {
-        message.textContent = "⚠️ Please enter a valid number.";
+      if (!guess) {
+        message.textContent = "⚠️ Please enter a number!";
         return;
       }
 
-      if (userGuess === secretNumber) {
-        message.textContent = `🎉 Correct! You found the number ${secretNumber} in ${attempts} attempts! You win! 🏆`;
-        return;
-      }
-
-      let difference = userGuess - secretNumber;
-
-      if (Math.abs(difference) > 10) {
-        if (userGuess > secretNumber) {
-          message.textContent = "📉 Too high! Try a lower number.";
+      if (guess === secret) {
+        message.textContent = "🎉 Correct! You found the number!";
+      } else if (Math.abs(secret - guess) <= 10) {
+        if (guess < secret) {
+          message.textContent = "🔥 Almost there! Guess a bit higher!";
         } else {
-          message.textContent = "📈 Too low! Try a higher number.";
+          message.textContent = "🔥 Almost there! Guess a bit lower!";
         }
+      } else if (guess < secret) {
+        message.textContent = "⬆️ Go Higher!";
       } else {
-        if (userGuess > secretNumber) {
-          message.textContent = "😮 Almost there! Just a little lower.";
-        } else {
-          message.textContent = "😮 Almost there! Just a little higher.";
-        }
+        message.textContent = "⬇️ Go Lower!";
       }
     }
   </script>
 </body>
 </html>
+
