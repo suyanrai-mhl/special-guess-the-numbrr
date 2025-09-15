@@ -7,163 +7,111 @@
 <style>
   body, html {
     margin:0; padding:0; font-family: 'Segoe UI', sans-serif; height:100%; overflow:hidden;
-    background: linear-gradient(135deg,#a1c4fd,#c2e9fb);
     display:flex; justify-content:center; align-items:center;
+    background: linear-gradient(135deg,#a1c4fd,#c2e9fb);
   }
 
-  #startScreen, #gameScreen {
-    position:absolute; top:0; left:0; width:100%; height:100%;
-    display:flex; flex-direction:column; justify-content:center; align-items:center;
+  #gameContainer {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; color: #032b4a;
   }
 
-  #startScreen {
-    background:linear-gradient(135deg,#a1c4fd,#c2e9fb);
-    color:white; font-size:2em; text-align:center;
+  #startContent, #gameContent { display: none; flex-direction: column; align-items: center; }
+
+  #startContent.active, #gameContent.active { display: flex; }
+
+  #startContent button, #gameContent button {
+    margin-top: 20px; padding:12px 24px; font-size:1.2em; border:none; border-radius:8px;
+    cursor:pointer; background:#ff416c; color:white; box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
   }
+  #startContent button:hover, #gameContent button:hover { transform: scale(1.1); }
 
-  #startScreen button {
-    margin-top:30px; padding:14px 28px; font-size:1.2em; border:none; border-radius:12px;
-    cursor:pointer; background:#ff416c; color:white; box-shadow:0 6px 16px rgba(0,0,0,0.3);
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-
-  #startScreen button:hover { 
-    transform: scale(1.1); 
-    box-shadow:0 10px 24px rgba(0,0,0,0.4);
-  }
-
-  #startTitle { animation: bounce 1s infinite alternate; font-size:3em; margin-bottom:20px; }
-
-  @keyframes bounce {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-15px); }
-  }
-
-  #gameScreen { display:none; flex-direction:column; background:rgba(255,255,255,0.1); padding:30px; border-radius:20px; box-shadow:0 12px 30px rgba(0,0,0,0.15); }
-
-  #gameScreen h1 { margin-bottom:20px; color:#032b4a; text-shadow: 1px 1px 2px #fff; }
-
-  #message { font-size:1.3em; margin-bottom:15px; color:#ff416c; min-height:1.5em; text-align:center; text-shadow: 0 1px 3px #fff; }
-
-  #guessInput { padding:10px; font-size:1.3em; width:120px; text-align:center; border-radius:8px; border:2px solid #032b4a; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
-  #guessBtn { padding:10px 18px; font-size:1em; margin-left:12px; border:none; border-radius:8px; background:#032b4a; color:white; cursor:pointer; transition:0.2s; }
+  #gameContent h1 { margin-bottom:20px; }
+  #message { font-size:1.3em; margin-bottom:15px; color:#ff416c; min-height:1.5em; }
+  #guessInput { padding:8px; font-size:1.2em; width:100px; text-align:center; border-radius:6px; border:1px solid #ccc; }
+  #guessBtn { padding:8px 16px; font-size:1em; margin-left:10px; border:none; border-radius:6px; background:#032b4a; color:white; cursor:pointer; }
   #guessBtn:hover { background:#ff416c; }
 
-  .overlay { position:fixed; inset:0; pointer-events:none; z-index:999; }
+  .overlay { position:fixed; inset:0; pointer-events:none; }
 
-  .flower, .sparkle, .confetti {
-    position:absolute; pointer-events:none; z-index:999;
-    animation-timing-function: linear; animation-iteration-count:1;
-  }
-
-  .flower { font-size:24px; }
-  .sparkle { font-size:14px; color:#fff9c4; }
-  .confetti { font-size:18px; }
+  .rose { position:absolute; pointer-events:none; z-index:999; font-size:24px; }
 
   .winner-msg {
-    position:fixed; top:40%; left:50%; transform:translate(-50%,-50%) scale(0); 
-    font-size:3em; color:#ff416c; z-index:1000; text-align:center;
-    background: rgba(255,255,255,0.7); padding:25px 40px; border-radius:20px; box-shadow:0 12px 30px rgba(0,0,0,0.3);
-    animation: pop 0.5s forwards;
+    position:fixed; top:40%; left:50%; transform:translate(-50%,-50%);
+    font-size:2em; color:#ff416c; z-index:1000; text-align:center;
+    background: rgba(255,255,255,0.7); padding:20px 30px; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.2);
   }
-
-  @keyframes pop {
-    to { transform:translate(-50%,-50%) scale(1); }
-  }
-
-  @keyframes fall {
-    0% { transform: translateY(0px) rotate(0deg); opacity:1; }
-    100% { transform: translateY(100vh) rotate(720deg); opacity:0; }
-  }
-
 </style>
 </head>
 <body>
 
-<div id="startScreen">
-  <div id="startTitle">🎯 Guess The Number 🎯</div>
-  <button id="startBtn">Start Game</button>
-</div>
+<div id="gameContainer">
+  <!-- Start Screen -->
+  <div id="startContent" class="active">
+    🎯 Guess The Number 🎯
+    <button id="startBtn">Start Game</button>
+  </div>
 
-<div id="gameScreen">
-  <h1>Guess the Number!</h1>
-  <div id="message">Enter a number between 1 and 100</div>
-  <div>
-    <input type="number" id="guessInput" min="1" max="100">
-    <button id="guessBtn">Guess</button>
+  <!-- Game Screen -->
+  <div id="gameContent">
+    <h1>Guess the Number!</h1>
+    <div id="message">Enter a number between 1 and 100</div>
+    <div>
+      <input type="number" id="guessInput" min="1" max="100">
+      <button id="guessBtn">Guess</button>
+    </div>
   </div>
 </div>
 
 <div class="overlay" id="overlay"></div>
 
 <script>
-let target, gameStarted=false;
+let target;
 const startBtn = document.getElementById('startBtn');
-const startScreen = document.getElementById('startScreen');
-const gameScreen = document.getElementById('gameScreen');
+const startContent = document.getElementById('startContent');
+const gameContent = document.getElementById('gameContent');
 const guessInput = document.getElementById('guessInput');
 const guessBtn = document.getElementById('guessBtn');
 const message = document.getElementById('message');
 const overlay = document.getElementById('overlay');
 
-function startGame() {
-  startScreen.style.display='none';
-  gameScreen.style.display='flex';
+startBtn.addEventListener('click', ()=>{
+  startContent.classList.remove('active');
+  gameContent.classList.add('active');
   target = Math.floor(Math.random()*100)+1;
-  gameStarted=true;
   message.textContent = "Enter a number between 1 and 100";
   guessInput.focus();
-}
-startBtn.addEventListener('click', startGame);
+});
 
 function showWinnerAnimation() {
-  const colors = ["#FF1A75","#FF416C","#FF4B2B","#FF758C","#FBC4AB","#FFD700","#FF69B4"];
+  const colors = ["#FF1A75","#FF416C","#FF4B2B","#FF758C","#FBC4AB"];
   
   // Winner message
   const msg = document.createElement("div");
   msg.className = "winner-msg";
   msg.textContent = "🎉 Winner Winner! Congratulations! 🎉";
   document.body.appendChild(msg);
-  setTimeout(()=>msg.remove(), 6000);
+  setTimeout(()=>msg.remove(), 5000);
 
-  // Falling roses
-  for(let i=0;i<80;i++){
-    const flower = document.createElement("div");
-    flower.className="flower";
-    flower.textContent="🌹";
-    flower.style.left = Math.random()*window.innerWidth + "px";
-    flower.style.fontSize = (24 + Math.random()*30) + "px";
-    flower.style.color = colors[Math.floor(Math.random()*colors.length)];
-    flower.style.animation = `fall ${3 + Math.random()*3}s linear forwards`;
-    overlay.appendChild(flower);
-    setTimeout(()=>flower.remove(),6000);
-  }
-
-  // Sparkles
-  for(let i=0;i<100;i++){
-    const sparkle = document.createElement("div");
-    sparkle.className="sparkle";
-    sparkle.textContent="✨";
-    sparkle.style.left = Math.random()*window.innerWidth + "px";
-    sparkle.style.top = Math.random()*window.innerHeight + "px";
-    sparkle.style.fontSize = (12 + Math.random()*10) + "px";
-    sparkle.style.opacity = Math.random();
-    sparkle.style.animation = `fall ${2 + Math.random()*2}s linear forwards`;
-    overlay.appendChild(sparkle);
-    setTimeout(()=>sparkle.remove(),4000);
-  }
-
-  // Confetti
+  // floating roses
   for(let i=0;i<60;i++){
-    const confetti = document.createElement("div");
-    confetti.className="confetti";
-    confetti.textContent="🎊";
-    confetti.style.left = Math.random()*window.innerWidth + "px";
-    confetti.style.fontSize = (16 + Math.random()*16) + "px";
-    confetti.style.color = colors[Math.floor(Math.random()*colors.length)];
-    confetti.style.animation = `fall ${3 + Math.random()*3}s linear forwards`;
-    overlay.appendChild(confetti);
-    setTimeout(()=>confetti.remove(),6000);
+    let rose = document.createElement("div");
+    rose.className = "rose";
+    rose.textContent = "🌹";
+    rose.style.left = Math.random()*window.innerWidth + "px";
+    rose.style.fontSize = (24 + Math.random()*20) + "px";
+    rose.style.color = colors[Math.floor(Math.random()*colors.length)];
+    rose.style.transform = `rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(rose);
+
+    rose.animate([
+      { transform: `translateY(0px) rotate(${Math.random()*360}deg)`, opacity:1 },
+      { transform: `translate(${(Math.random()-0.5)*200}px, 100vh) rotate(${Math.random()*720}deg)`, opacity:0 }
+    ], { duration:3000 + Math.random()*2000, easing:'ease-out' });
+
+    setTimeout(()=>rose.remove(),5000);
   }
 }
 
