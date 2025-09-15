@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Guess the Number Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #1e3c72, #2a5298);
+      color: white;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      font-size: 2.5em;
+    }
+    #game {
+      margin-top: 30px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 1.2em;
+      margin: 10px;
+      border-radius: 8px;
+      border: none;
+    }
+    input {
+      width: 120px;
+      text-align: center;
+    }
+    button {
+      background: #ff9800;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #e68900;
+    }
+    #message {
+      font-size: 1.3em;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Guess the Number 🎯</h1>
+  <p>The computer picked a number between <b>1 and 100</b>. Can you guess it?</p>
+  
+  <div id="game">
+    <input type="number" id="guess" placeholder="Enter guess" min="1" max="100">
+    <button onclick="makeGuess()">Guess</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    let secretNumber = Math.floor(Math.random() * 100) + 1; // random number 1-100
+    let attempts = 0;
+
+    function makeGuess() {
+      const userGuess = parseInt(document.getElementById('guess').value);
+      const message = document.getElementById('message');
+      attempts++;
+
+      if (isNaN(userGuess)) {
+        message.textContent = "⚠️ Please enter a valid number.";
+        return;
+      }
+
+      if (userGuess === secretNumber) {
+        message.textContent = `🎉 Correct! You found the number ${secretNumber} in ${attempts} attempts! You win! 🏆`;
+        return;
+      }
+
+      let difference = userGuess - secretNumber;
+
+      if (Math.abs(difference) > 10) {
+        if (userGuess > secretNumber) {
+          message.textContent = "📉 Too high! Try a lower number.";
+        } else {
+          message.textContent = "📈 Too low! Try a higher number.";
+        }
+      } else {
+        if (userGuess > secretNumber) {
+          message.textContent = "😮 Almost there! Just a little lower.";
+        } else {
+          message.textContent = "😮 Almost there! Just a little higher.";
+        }
+      }
+    }
+  </script>
+</body>
+</html>
