@@ -1,138 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Guess the Number</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: "Poppins", sans-serif;
-      background: linear-gradient(120deg, #ff9a9e, #fad0c4);
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Guess the Number</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(120deg, #ff9a9e, #fad0c4);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+  }
 
-    /* Intro screen */
-    .intro {
-      text-align: center;
-      animation: fadeIn 1.5s ease-in-out;
-    }
+  /* Intro screen */
+  .intro {
+    text-align: center;
+    animation: fadeIn 1.5s ease-in-out;
+  }
 
-    .intro h1 {
-      font-size: 40px;
-      font-weight: bold;
-      background: linear-gradient(45deg, #ff416c, #ff4b2b);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: pulse 1.5s infinite alternate;
-    }
+  .intro h1 {
+    font-size: 42px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff416c, #ff4b2b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: pulse 1.5s infinite alternate;
+    margin-bottom: 20px;
+  }
 
-    .start-btn {
-      margin-top: 20px;
-      padding: 12px 28px;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(45deg, #43e97b, #38f9d7);
-      color: white;
-      cursor: pointer;
-      transition: transform 0.2s, opacity 0.3s;
-    }
+  .start-btn {
+    padding: 14px 32px;
+    font-size: 18px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(45deg, #43e97b, #38f9d7);
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.3s;
+  }
 
-    .start-btn:hover {
-      transform: scale(1.05);
-      opacity: 0.9;
-    }
+  .start-btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
 
-    /* Game container */
-    .game-container {
-      display: none;
-      background: rgba(255,255,255,0.95);
-      padding: 40px 50px;
-      border-radius: 20px;
-      box-shadow: 0 12px 35px rgba(0,0,0,0.2);
-      text-align: center;
-      max-width: 420px;
-      width: 90%;
-      animation: floatUp 1.2s ease;
-    }
+  /* Game container */
+  .game-container {
+    display: none;
+    background: rgba(255,255,255,0.95);
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+    animation: floatUp 1.2s ease;
+  }
 
-    h2 {
-      font-size: 26px;
-      margin-bottom: 10px;
-      color: #333;
-    }
+  h2 { font-size: 26px; margin-bottom: 10px; color: #333; }
+  p { font-size: 15px; color: #444; margin-bottom: 25px; }
 
-    p {
-      font-size: 15px;
-      color: #444;
-      margin-bottom: 25px;
-    }
+  input[type="number"] {
+    padding: 12px;
+    font-size: 18px;
+    width: 70%;
+    border: 2px solid #ff758c;
+    border-radius: 12px;
+    outline: none;
+    text-align: center;
+    margin-bottom: 15px;
+    transition: 0.3s;
+  }
+  input[type="number"]:focus {
+    border-color: #ff416c;
+    box-shadow: 0 0 10px rgba(255,65,108,0.4);
+  }
 
-    input[type="number"] {
-      padding: 12px;
-      font-size: 18px;
-      width: 70%;
-      border: 2px solid #ff758c;
-      border-radius: 12px;
-      outline: none;
-      text-align: center;
-      margin-bottom: 15px;
-      transition: 0.3s;
-    }
+  button {
+    padding: 12px 25px;
+    background: linear-gradient(45deg, #ff416c, #ff4b2b);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.3s;
+  }
+  button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
 
-    input[type="number"]:focus {
-      border-color: #ff416c;
-      box-shadow: 0 0 10px rgba(255,65,108,0.4);
-    }
+  .message {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+    min-height: 28px;
+  }
 
-    button {
-      padding: 12px 25px;
-      background: linear-gradient(45deg, #ff416c, #ff4b2b);
-      border: none;
-      border-radius: 12px;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-      transition: transform 0.2s, opacity 0.3s;
-    }
+  .reset-btn {
+    margin-top: 15px;
+    background: linear-gradient(45deg, #43e97b, #38f9d7);
+  }
 
-    button:hover {
-      transform: scale(1.05);
-      opacity: 0.9;
-    }
+  .rose {
+    position: absolute;
+    font-size: 24px;
+    animation: roseFall 3s linear forwards;
+    pointer-events: none;
+  }
 
-    .message {
-      margin-top: 20px;
-      font-weight: bold;
-      font-size: 18px;
-      color: #333;
-      min-height: 28px;
-    }
+  @keyframes roseFall {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  }
 
-    .reset-btn {
-      margin-top: 15px;
-      background: linear-gradient(45deg, #43e97b, #38f9d7);
-    }
+  @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.1); } }
+  @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+  @keyframes floatUp { from {opacity: 0; transform: translateY(30px);} to {opacity: 1; transform: translateY(0);} }
 
-    @keyframes pulse {
-      from { transform: scale(1); }
-      to { transform: scale(1.1); }
-    }
+  .winner-msg {
+    position: fixed;
+    top: 40%;
+    width: 100%;
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    color: #ff1a75;
+    text-shadow: 2px 2px 6px #fff;
+    pointer-events: none;
+    animation: bounce 1s ease-in-out;
+  }
 
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
+  @keyframes bounce {
+    0% { transform: translateY(-30px); opacity:0; }
+    50% { transform: translateY(0px); opacity:1; }
+    100% { transform: translateY(0px); opacity:1; }
+  }
 
-    @keyframes floatUp {
-      from {opacity: 0; transform: translateY(30px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
-  </style>
+</style>
 </head>
 <body>
   <!-- Intro Screen -->
@@ -152,42 +164,66 @@
     <button class="reset-btn" onclick="resetGame()">🔄 New Game</button>
   </div>
 
-  <script>
-    let secret = Math.floor(Math.random() * 100) + 1;
+<script>
+let secret = Math.floor(Math.random() * 100) + 1;
 
-    function startGame() {
-      document.getElementById("intro").style.display = "none";
-      document.getElementById("game").style.display = "block";
-    }
+function startGame() {
+  document.getElementById("intro").style.display = "none";
+  document.getElementById("game").style.display = "block";
+}
 
-    function checkGuess() {
-      let guess = Number(document.getElementById("guess").value);
-      let message = document.getElementById("message");
+function checkGuess() {
+  let guess = Number(document.getElementById("guess").value);
+  let message = document.getElementById("message");
 
-      if (!guess) {
-        message.textContent = "⚠️ Enter a number!";
-        return;
-      }
+  if (!guess) {
+    message.textContent = "⚠️ Enter a number!";
+    return;
+  }
 
-      if (guess === secret) {
-        message.textContent = "🎉 Correct! You found it!";
-      } else if (Math.abs(secret - guess) <= 10) {
-        message.textContent = guess < secret 
-          ? "🔥 Almost there! A little higher!" 
-          : "🔥 Almost there! A little lower!";
-      } else {
-        message.textContent = guess < secret 
-          ? "⬆️ Try higher!" 
-          : "⬇️ Try lower!";
-      }
-    }
+  if (guess === secret) {
+    message.textContent = "🎉 Correct! You found it!";
+    showWinnerAnimation();
+  } else if (Math.abs(secret - guess) <= 10) {
+    message.textContent = guess < secret 
+      ? "🔥 Almost there! A little higher!" 
+      : "🔥 Almost there! A little lower!";
+  } else {
+    message.textContent = guess < secret 
+      ? "⬆️ Try higher!" 
+      : "⬇️ Try lower!";
+  }
+}
 
-    function resetGame() {
-      secret = Math.floor(Math.random() * 100) + 1;
-      document.getElementById("message").textContent = "";
-      document.getElementById("guess").value = "";
-    }
-  </script>
+function resetGame() {
+  secret = Math.floor(Math.random() * 100) + 1;
+  document.getElementById("message").textContent = "";
+  document.getElementById("guess").value = "";
+}
+
+// Winner animation
+function showWinnerAnimation() {
+  // show winner message
+  const msg = document.createElement("div");
+  msg.className = "winner-msg";
+  msg.textContent = "🎉 Winner Winner! Congratulations! 🎉";
+  document.body.appendChild(msg);
+  setTimeout(()=>msg.remove(), 4000);
+
+  // spawn roses
+  for(let i=0;i<50;i++){
+    let rose = document.createElement("div");
+    rose.className = "rose";
+    rose.textContent = "🌹";
+    rose.style.left = Math.random() * window.innerWidth + "px";
+    rose.style.animationDelay = (Math.random()*2) + "s";
+    rose.style.fontSize = (20 + Math.random()*20) + "px";
+    document.body.appendChild(rose);
+    // remove after animation
+    setTimeout(()=>rose.remove(), 3000);
+  }
+}
+</script>
 </body>
 </html>
 
